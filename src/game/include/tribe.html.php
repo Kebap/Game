@@ -242,10 +242,20 @@ function tribe_getContent($caveID, &$details) {
         break;
       }
 
-      $messageID = Tribe::processKickMember($playerID, $tribeData);
-      if ($messageID > 0) {
-        unset($tribeMembers[$playerID]);
-      }
+      if (Request::isPost('postConfirm')) {
+        $messageID = Tribe::processKickMember($playerID, $tribeData);
+        if ($messageID > 0) {
+          unset($tribeMembers[$playerID]);
+        }
+      } else {
+        $template->addVars(array(
+           'confirm_box' => true,
+           'confirm_action'  => TRIBE_ACTION_KICK,
+           'confirm_id'      => false,
+           'confirm_mode'    => TRIBE,
+           'confirm_msg'     => sprintf(_('Möchtest du den Spieler wirklich aus dem Stamm kicken?')),
+         ));
+       }
     break;
 
 /****************************************************************************************************
